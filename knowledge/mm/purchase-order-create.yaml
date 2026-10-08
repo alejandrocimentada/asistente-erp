@@ -1,0 +1,77 @@
+id: purchase-order-create
+module: MM
+area: compras
+names:
+  es: Crear una orden de compra (pedido de compras)
+  en: Create purchase order
+tcode: ME21N
+related_tcodes: [ME22N, ME23N, ME51N, MIGO]
+keywords:
+  es: [crear orden de compra, orden de compra, nueva orden de compra, crear pedido, pedido de compras, pedido a proveedor, comprar, hacer una compra, emitir orden de compra, oc]
+  en: [create purchase order, purchase order, new po, create po, order from supplier, order from vendor, buy]
+summary: >-
+  Crea un pedido de compras (lo que muchas empresas llaman "orden de compra"): a qué
+  proveedor, qué material, cuánto, a qué precio, cuándo y a qué centro se entrega. En SAP en
+  español suele llamarse "pedido".
+s4hana_notes: >-
+  ME21N existe en ECC y en S/4HANA (en Fiori aparece como la app "Create Purchase Order -
+  Advanced (ME21N)"). La app Fiori nativa es "Manage Purchase Orders" (F0842A). En S/4HANA el
+  proveedor (vendor) se llama "supplier" y se mantiene como Business Partner (transacción BP).
+  La versión antigua ME21 fue reemplazada por ME21N.
+fiori_app:
+  name: Manage Purchase Orders
+  id: F0842A
+  note: Crear, cambiar y revisar pedidos desde Fiori. "Create Purchase Order - Advanced" abre ME21N dentro de Fiori.
+steps:
+  - Escribe ME21N y presiona Enter.
+  - Arriba a la izquierda elige la Clase de pedido (Order Type). NB es el pedido estándar; tu empresa puede tener otras.
+  - Escribe el Proveedor (Vendor/Supplier) y presiona Enter.
+  - "En la cabecera, pestaña de datos organizativos, revisa Organización de compras (Purchasing Org.), Grupo de compras (Purchasing Group) y Sociedad (Company Code)."
+  - "En la tabla de posiciones, por cada renglón escribe Material, Cantidad (PO Quantity), Fecha de entrega (Delivery Date), Centro (Plant) y, si aplica, Almacén (Storage Location). El precio suele venir del registro info o contrato; si no, escríbelo."
+  - Presiona Verificar (Check) para ver si falta algo. Corrige los mensajes en rojo.
+  - Guarda (Ctrl+S). SAP muestra el número del pedido creado; anótalo.
+  - "Si tu empresa usa aprobaciones (liberación), el pedido queda esperando aprobación antes de enviarse al proveedor."
+key_fields:
+  - {label: Clase de pedido (Order Type), technical: EKKO-BSART, meaning: "Tipo de documento: NB estándar, UB traslado entre centros, u otros propios de la empresa."}
+  - {label: Proveedor (Vendor/Supplier), technical: EKKO-LIFNR, meaning: A quién le compras.}
+  - {label: Organización de compras (Purchasing Org.), technical: EKKO-EKORG, meaning: Unidad que negocia las compras.}
+  - {label: Grupo de compras (Purchasing Group), technical: EKKO-EKGRP, meaning: Comprador o equipo responsable.}
+  - {label: Material, technical: EKPO-MATNR, meaning: Qué compras.}
+  - {label: Centro (Plant), technical: EKPO-WERKS, meaning: Dónde se recibe.}
+tables:
+  - {name: EKKO, description: Cabecera del documento de compras (pedido).}
+  - {name: EKPO, description: Posiciones del documento de compras.}
+  - {name: EKET, description: Repartos (fechas y cantidades de entrega).}
+  - {name: EKKN, description: Imputación (centro de coste, etc.) en documentos de compras.}
+  - {name: EKBE, description: Historial del pedido (entradas de mercancía, facturas).}
+  - {name: LFA1, description: Datos generales del proveedor.}
+common_errors:
+  - error: SAP pide un centro de coste u otra imputación.
+    meaning: La posición tiene un tipo de imputación (por ejemplo K = centro de coste) que exige ese dato.
+    what_to_do: Escribe el centro de coste correcto o pregúntale a tu área cuál usar.
+    verified: false
+  - error: El proveedor está bloqueado o no está creado para tu organización de compras.
+    meaning: Falta ampliar el proveedor a tu organización de compras, o compras lo bloqueó.
+    what_to_do: Pide al equipo de datos maestros que lo revise (en S/4HANA, con la transacción BP).
+    verified: false
+  - error: El material no está creado en el centro.
+    meaning: El material no tiene datos para ese centro.
+    what_to_do: Revisa el centro o pide ampliar el material (MM01).
+    verified: false
+  - error: Sale un aviso de que no hay precio.
+    meaning: No hay registro info ni contrato con precio para ese proveedor y material.
+    what_to_do: Escribe el precio a mano si tu empresa lo permite, o pide que se cree el registro info.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Campos técnicos EKKO-LIFNR y EKPO-MATNR/EKPO-WERKS: no aparecen literalmente en las páginas revisadas."
+sources:
+  - {title: "SAP Help (ERP): Purchasing Applications in Single-Screen Transactions (ME21N, ME22N, ME23N)", url: "https://help.sap.com/docs/SAP_ERP/967e1c2a6a8c4183b7e07d28e7574445/787db65334e6b54ce10000000a174cb4.html"}
+  - {title: "SAP Help (ERP): Enjoy Purchase Order (ME21N reemplaza ME21)", url: "https://help.sap.com/docs/SAP_ERP/a58165ba587b4a7ebd5930c381a11649/8082cf535b804808e10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Create Purchase Order - Advanced (ME21N), order type NB", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/7a2b025d8a7551eb3d8826b5d716537c/b431b56716614f278242563d93a025cb.html"}
+  - {title: "SAP Help (S/4HANA 2025): International Trade Compliance Checks for Purchase Orders (Manage Purchase Orders F0842a)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/d207fe7bc07043bcb193d351b5afc731.html?version=2025.000"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Consumable Purchasing (Manage Purchase Orders F0842A)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/f09d278d3472a69eb576f1ed768b35a1/f5c1199f35244f83b353f48af2e7625c.html"}
+  - {title: "SAP Simplification List S/4HANA 1610 FPS01 (Business Partner approach) (PDF)", url: "https://help.sap.com/doc/pdfa4322f56824ae221e10000000a4450e5/1610%20001/en-US/SIMPL_OP1610_FPS01.pdf"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing (EKKO, EKPO, campos BSART, EKORG, EKGRP)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

@@ -1,0 +1,70 @@
+id: goods-receipt-po
+module: MM
+area: movimientos
+names:
+  es: Registrar la entrada de mercancías de una orden de compra
+  en: Goods receipt for purchase order
+tcode: MIGO
+related_tcodes: [MB51, ME23N, MMBE]
+keywords:
+  es: [entrada de mercancias, entrada de mercancia, recibir mercancia, recepcion, recibir pedido, llego el pedido, dar entrada, registrar entrada, recibir orden de compra, 101, anular entrada, revertir entrada]
+  en: [goods receipt, receive goods, post goods receipt, gr for po, receive purchase order, movement type 101, reverse goods receipt]
+summary: >-
+  Cuando llega lo que se compró, se registra la entrada de mercancías contra el pedido. Eso
+  sube el stock, actualiza el historial del pedido y deja lista la factura para contabilidad.
+  La clase de movimiento normal es 101.
+s4hana_notes: >-
+  MIGO es la transacción de movimientos en ECC y en S/4HANA. En S/4HANA las transacciones
+  antiguas (MB01, MB0A, MB1A, MB1B, MB1C, MB31, entre otras) ya no se usan y fueron
+  reemplazadas por MIGO. Los documentos se guardan en MATDOC (en ECC, en MKPF y MSEG). En
+  Fiori, la app es "Post Goods Receipt for Purchasing Document" (F0843).
+fiori_app:
+  name: Post Goods Receipt for Purchasing Document
+  id: F0843
+  note: En S/4HANA Cloud, MIGO también aparece como la app "Post Goods Movement".
+steps:
+  - Escribe MIGO y presiona Enter.
+  - "En la primera lista desplegable elige Entrada de mercancías (Goods Receipt); en la segunda, Pedido (Purchase Order)."
+  - Escribe el número del pedido y presiona Enter. Revisa que la clase de movimiento sea 101.
+  - "SAP copia las posiciones del pedido. En cada posición revisa Cantidad y Almacén (Storage Location), y marca la casilla Posición OK (Item OK)."
+  - Presiona Verificar (Check) y corrige los mensajes.
+  - Presiona Contabilizar (Post). SAP muestra el número del documento material.
+  - "Para anular una entrada hecha por error: en MIGO elige Anulación (Cancellation), escribe el documento material y contabiliza; SAP genera el movimiento inverso (102)."
+key_fields:
+  - {label: Pedido (Purchase Order), technical: EKKO-EBELN, meaning: Pedido contra el que recibes.}
+  - {label: Clase de movimiento (Movement Type), technical: BWART, meaning: "101 = entrada por pedido; 103 = entrada a stock bloqueado de entradas; 102 = anulación de 101."}
+  - {label: Almacén (Storage Location), technical: LGORT, meaning: Dónde se guarda lo recibido.}
+  - {label: Posición OK (Item OK), technical: "", meaning: Casilla que confirma que esa línea se va a contabilizar.}
+tables:
+  - {name: MKPF, description: "ECC: cabecera del documento material."}
+  - {name: MSEG, description: "ECC: posiciones del documento material."}
+  - {name: MATDOC, description: "S/4HANA: documento material (cabecera y posiciones)."}
+  - {name: EKBE, description: Historial del pedido; aquí se ve la entrada.}
+  - {name: MARD, description: Stock por almacén (en S/4HANA calculado desde MATDOC).}
+common_errors:
+  - error: "M7021: Deficit of … (falta de stock)."
+    meaning: El movimiento dejaría el stock en negativo. En entradas suele aparecer al anular, porque lo recibido ya se consumió.
+    what_to_do: Revisa el stock en MMBE; si falta, primero hay que regularizar el stock (consúltalo con tu usuario clave).
+    verified: true
+  - error: El pedido ya está entregado por completo.
+    meaning: Ya se recibió toda la cantidad pedida.
+    what_to_do: Revisa el historial en ME23N; si llegó de más, Compras debe ajustar el pedido.
+    verified: false
+  - error: El período contable no está abierto.
+    meaning: La fecha de contabilización cae en un período cerrado de inventario.
+    what_to_do: Usa la fecha de hoy o consulta con Contabilidad o el usuario clave.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - Nombres exactos de las listas desplegables de MIGO en español.
+    - Campo técnico BWART.
+sources:
+  - {title: "SAP Support Content: Transactions in EWM and ERP (MB01, MB1A, MB1B, MB1C… reemplazadas por MIGO)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/sewm/3900061781.html"}
+  - {title: "SAP Help (ERP Catch Weight): Goods Movements (101, 103, 105)", url: "https://help.sap.com/docs/SAP_ERP/4e5299fdbcc34b2eb3c877efcc995105/4d6df0468bf051b0e10000000a42189c.html"}
+  - {title: "SAP Help (S/4HANA on-premise): Cancellation of Goods Movements (MIGO, 102)", url: "https://help.sap.com/docs/sap_s4hana_on-premise/e72f747389b340229f7fa343975bfa57/7bdbc353b677b44ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Post Goods Movement", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/38b1ba53422bb54ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Post Goods Receipt for Purchasing Document (F0843)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/64ec441c3e8b7781f14d5d5073931827/e6fba36d0ff246918cf7c96422e6b24a.html"}
+  - {title: "SAP Support Content: M7021 - Deficit of", url: "https://help.sap.com/docs/SUPPORT_CONTENT/qualman/3363506129.html"}
+  - {title: "SAP Support Content: New Simplified Data Model (NSDM) for Inventory Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/erpscm/3362167285.html"}
+last_verified: 2026-10-08

@@ -1,0 +1,49 @@
+id: po-list-by-material
+module: MM
+area: compras
+names:
+  es: Lista de órdenes de compra por material
+  en: Purchase orders by material
+tcode: ME2M
+related_tcodes: [ME2L, ME2N, ME23N, MD04]
+keywords:
+  es: [ordenes de compra por material, pedidos por material, quien nos vende este material, a que precio compramos, pedidos abiertos de un material, compras de un material, historial de compras material]
+  en: [purchase orders by material, po list material, open orders material, purchasing documents for material, purchase history material]
+summary: >-
+  Lista los pedidos de compras de uno o varios materiales: a qué proveedor, cuánto, a qué
+  precio y qué falta por recibir. Útil para ver el historial de compras de un artículo.
+s4hana_notes: >-
+  En ECC es "Purchasing Documents for Material". La alternativa Fiori es "Monitor Purchase
+  Order Items" (F2358). No se encontró en la documentación revisada una página que confirme
+  ME2M en S/4HANA (ver sin_verificar).
+fiori_app:
+  name: Monitor Purchase Order Items
+  id: F2358
+  note: Filtra posiciones de pedidos por material.
+steps:
+  - Escribe ME2M y presiona Enter.
+  - "Escribe el Material (o un rango) y el Centro (Plant) si quieres limitarlo."
+  - "Opcional: usa el Parámetro de selección (Selection Parameters) para ver solo lo pendiente de recibir o facturar."
+  - Presiona Ejecutar (F8).
+  - Doble clic en un pedido lo abre en ME23N.
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Material a consultar.}
+  - {label: Centro (Plant), technical: WERKS, meaning: Centro de entrega.}
+tables:
+  - {name: EKKO, description: Cabecera del pedido.}
+  - {name: EKPO, description: Posiciones del pedido.}
+common_errors:
+  - error: No salen pedidos.
+    meaning: El material no se compra (quizá se fabrica) o hay filtros de más.
+    what_to_do: Quita centro y parámetro de selección; si sigue vacío, revisa en MD04 cómo se abastece.
+    verified: false
+verification:
+  status: parcial
+  sin_verificar:
+    - Que ME2M siga disponible en S/4HANA (solo se encontró documentación de ECC).
+sources:
+  - {title: "SAP Help (ERP): Lists of Purchase Orders (MM-PUR), ME2M Purchase orders by material", url: "https://help.sap.com/docs/SAP_ERP/6cfdc7caaef746cd9c7543e32e7e87c0/8d06b753128eb44ce10000000a174cb4.html"}
+  - {title: "SAP Help (ERP): Reporting in Purchasing (ME2M Purchasing Documents for Material)", url: "https://help.sap.com/docs/SAP_ERP/349992fb60854a62a264d716ad5c8f54/a1e5e052427c9d36e10000000a44538d.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Monitor Purchase Order Items (F2358)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/b992de09d8574e38bf6bda87472266e0.html?version=2608.00"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

@@ -1,0 +1,58 @@
+id: warehouse-stock
+module: MM
+area: inventario
+names:
+  es: Lista de stock por centro o almacén (varios materiales)
+  en: Warehouse stock list per plant (multiple materials)
+tcode: MB52
+related_tcodes: [MMBE, MB51, MB5B]
+keywords:
+  es: [stock por centro, stock por almacen, lista de stock, inventario de un almacen, inventario de una tienda, varios materiales, todos los materiales, existencias por planta, reporte de inventario, valor del stock]
+  en: [warehouse stock, stock list, stock per plant, stock per storage location, multiple materials, all materials, inventory report, stock value]
+summary: >-
+  Lista el stock de MUCHOS materiales a la vez para uno o varios centros y almacenes. Úsalo
+  cuando la pregunta es "¿qué hay en este almacén?" en lugar de "¿dónde está este material?"
+  (para eso es MMBE).
+s4hana_notes: >-
+  En S/4HANA on-premise MB52 sigue disponible y lee el stock calculado desde MATDOC. En S/4HANA
+  Cloud Public Edition, desde la versión 2508, MB52 quedó obsoleto (deprecated) y SAP recomienda
+  la app "Stock - Multiple Materials" (F1595); al usar MB52 aparece un aviso para migrar.
+fiori_app:
+  name: Stock - Multiple Materials
+  id: F1595
+  note: Reemplazo recomendado de MB52 en S/4HANA Cloud Public Edition.
+steps:
+  - Escribe MB52 en el campo de comandos y presiona Enter.
+  - Llena Centro (Plant) y, si quieres, Almacén (Storage Location). Deja Material vacío para ver todos los materiales, o usa un rango.
+  - Si necesitas solo lo que tiene existencias, busca en la pantalla de selección la opción para no mostrar líneas en cero (el nombre exacto varía según la versión).
+  - Presiona Ejecutar (F8).
+  - Aparece una lista con un renglón por material y almacén. Puedes ordenarla, filtrarla y exportarla a Excel (ver la entrada "Exportar un reporte a Excel").
+key_fields:
+  - {label: Centro (Plant), technical: WERKS, meaning: Tienda o planta de la que quieres la lista.}
+  - {label: Almacén (Storage Location), technical: LGORT, meaning: Almacén dentro del centro.}
+  - {label: Material, technical: MATNR, meaning: "Opcional: uno o un rango de materiales."}
+  - {label: Libre utilización (Unrestricted-use), technical: LABST, meaning: Stock disponible.}
+tables:
+  - {name: MARD, description: "Stock por almacén (en ECC está guardado aquí; en S/4HANA se calcula desde MATDOC)."}
+  - {name: MCHB, description: Stock por lote.}
+  - {name: MBEW, description: Valoración del material (precio y valor del stock).}
+  - {name: MAKT, description: Descripciones del material.}
+common_errors:
+  - error: La lista sale vacía.
+    meaning: No hay stock con los filtros que pusiste, o el centro/almacén no es correcto.
+    what_to_do: Quita filtros (por ejemplo el almacén) y vuelve a ejecutar.
+    verified: false
+  - error: Aparece un aviso de que la transacción está obsoleta (deprecated).
+    meaning: Estás en S/4HANA Cloud Public Edition 2508 o posterior.
+    what_to_do: Usa la app Fiori "Stock - Multiple Materials" (F1595).
+    verified: true
+verification:
+  status: verificado
+  sin_verificar:
+    - Nombre exacto de la opción para ocultar líneas en cero (depende de la versión).
+sources:
+  - {title: "SAP Help (ERP): Reporting (MM-IM), Display Stock List MB52", url: "https://help.sap.com/docs/SAP_ERP/6cfdc7caaef746cd9c7543e32e7e87c0/5307b753128eb44ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Grace Period Active: Display Warehouse Stock (MB52)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/684ea2b94c154fc48e93ffd424c6af00.html?version=2608.00"}
+  - {title: "SAP Help (S/4HANA on-premise): Purging and Precompacting of Material Document Data", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/677f0a4e71d7487ebb70683014761789/7a29ed568b0c41828a4e2c8da9ae1082.html"}
+  - {title: "SAP Support Content: Materials Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08

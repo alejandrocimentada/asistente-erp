@@ -1,0 +1,55 @@
+id: purchase-order-display
+module: MM
+area: compras
+names:
+  es: Ver una orden de compra (pedido de compras)
+  en: Display purchase order
+tcode: ME23N
+related_tcodes: [ME21N, ME22N, ME2L, ME2M]
+keywords:
+  es: [ver orden de compra, consultar orden de compra, ver pedido, consultar pedido, estado del pedido, historial del pedido, ya llego el pedido, cuanto falta por recibir, visualizar pedido]
+  en: [display purchase order, view po, po status, po history, has it been received, open quantity]
+summary: >-
+  Abre un pedido de compras solo para consultar: proveedor, posiciones, precios, fechas y el
+  historial (qué ya se recibió y qué ya se facturó).
+s4hana_notes: >-
+  ME23N existe en ECC y en S/4HANA. En Fiori se consulta con "Manage Purchase Orders" (F0842A)
+  o, para ver muchas posiciones a la vez, con "Monitor Purchase Order Items" (F2358).
+fiori_app:
+  name: Manage Purchase Orders
+  id: F0842A
+  note: Para listas de posiciones abiertas se usa Monitor Purchase Order Items (F2358).
+steps:
+  - Escribe ME23N y presiona Enter.
+  - "Si muestra otro pedido, usa Otro pedido (Other Purchase Order) y escribe el número."
+  - "Revisa la cabecera (proveedor, condiciones) y la tabla de posiciones (material, cantidad, precio, fecha)."
+  - "Selecciona una posición y abre la pestaña Historial de pedido (Purchase Order History) para ver entradas de mercancía y facturas."
+  - "Si no ves la pestaña de historial, es porque todavía no hay entradas ni facturas para esa posición."
+key_fields:
+  - {label: Pedido (Purchase Order), technical: EKKO-EBELN, meaning: Número del pedido.}
+  - {label: Historial de pedido (PO History), technical: "", meaning: Entradas de mercancía y facturas ya registradas.}
+tables:
+  - {name: EKKO, description: Cabecera del pedido.}
+  - {name: EKPO, description: Posiciones del pedido.}
+  - {name: EKBE, description: Historial por documento de compras.}
+  - {name: EKET, description: Repartos.}
+common_errors:
+  - error: SAP dice que el pedido no existe.
+    meaning: El número está mal, o es otro tipo de documento (por ejemplo una solicitud de pedido, que va en ME53N).
+    what_to_do: Revisa el número; si empieza distinto a tus pedidos, prueba en ME53N.
+    verified: false
+  - error: No tienes autorización para ver ese pedido.
+    meaning: Tu rol está limitado por organización de compras, centro o clase de pedido.
+    what_to_do: Pide acceso a tu usuario clave (key user).
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Que la pestaña de historial solo aparezca cuando hay movimientos: es la conducta habitual, no confirmada en la fuente."
+sources:
+  - {title: "SAP Help (ERP): Purchasing Applications in Single-Screen Transactions (ME23N)", url: "https://help.sap.com/docs/SAP_ERP/967e1c2a6a8c4183b7e07d28e7574445/787db65334e6b54ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Output Messages for Archived Purchase Orders (ME21N/ME22N/ME23N)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/3df3553c16b84b078b6c529bb728f9b6.html?version=2608.00"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Monitor Purchase Order Items (F2358)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/b992de09d8574e38bf6bda87472266e0.html?version=2608.00"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Consumable Purchasing (Manage Purchase Orders F0842A)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/f09d278d3472a69eb576f1ed768b35a1/f5c1199f35244f83b353f48af2e7625c.html"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing (EKBE)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

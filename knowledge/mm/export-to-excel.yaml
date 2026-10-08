@@ -1,0 +1,50 @@
+id: export-to-excel
+module: MM
+area: reportes
+names:
+  es: Exportar un reporte o lista de SAP a Excel
+  en: Export a report list to Excel
+tcode: "(cualquier reporte)"
+related_tcodes: [MB52, MB51, ME2L, ME2M]
+keywords:
+  es: [exportar, exportar a excel, bajar a excel, descargar reporte, descargar lista, pasar a excel, hoja de calculo, guardar lista, archivo local, copiar a excel]
+  en: [export to excel, export, download report, download list, spreadsheet, local file, save list]
+summary: >-
+  Casi cualquier lista de SAP GUI se puede pasar a Excel. Hay dos tipos de lista y cada uno
+  tiene su botón: las listas ALV (tabla con columnas que se pueden ordenar y filtrar) y las
+  listas clásicas (texto plano).
+s4hana_notes: >-
+  Funciona igual en SAP GUI de ECC y de S/4HANA. Según la instalación (on-premise o nube),
+  SAP GUI puede exportar a una aplicación local o a un proveedor en la nube. En las apps Fiori
+  las tablas suelen tener su propio botón de exportar a hoja de cálculo (ver sin_verificar).
+fiori_app: null
+steps:
+  - "Ejecuta el reporte que quieres (por ejemplo MB52 o ME2M) hasta ver la lista en pantalla."
+  - "Si es una lista ALV (con encabezados de columna y botones de ordenar/filtrar): presiona el botón Exportar (Export) y elige Hoja de cálculo (Spreadsheet). Elige el formato (por ejemplo Excel .xlsx) y dónde guardarlo."
+  - "Si es una lista clásica (texto): usa el menú Sistema (System) > Lista (List) > Grabar (Save) > Fichero local (Local File). Elige Hoja de cálculo (Spreadsheet) o Texto con tabuladores (Text with Tabs) y escribe la ruta y el nombre del archivo."
+  - Abre el archivo en Excel.
+  - "Si los acentos o la ñ salen raros, vuelve a exportar revisando el campo de codificación (Encoding) en la ventana de guardado."
+key_fields:
+  - {label: Formato (Format), technical: "", meaning: "Hoja de cálculo, Texto con tabuladores, Sin convertir (Unconverted), etc."}
+  - {label: Codificación (Encoding), technical: "", meaning: Juego de caracteres del archivo; afecta acentos y ñ.}
+tables: []
+common_errors:
+  - error: No aparece el botón de exportar.
+    meaning: Es una lista clásica, no ALV, o tu empresa limitó la exportación.
+    what_to_do: Usa Sistema > Lista > Grabar > Fichero local; si tampoco está, pregúntale a tu usuario clave.
+    verified: false
+  - error: Los acentos o caracteres especiales salen mal en Excel.
+    meaning: El archivo se guardó con una codificación distinta a la que espera Excel.
+    what_to_do: Exporta de nuevo y elige otra codificación, o usa el formato Hoja de cálculo.
+    verified: true
+verification:
+  status: verificado
+  sin_verificar:
+    - Botón de exportar en las tablas de apps Fiori.
+    - Nombres de menú en SAP GUI en español (Sistema > Lista > Grabar > Fichero local).
+sources:
+  - {title: "SAP Help (SAP GUI 2025 FPS02): Export to Spreadsheet", url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b1c834a22d05483b8a75710743b5ff26/e18dd05de0b24f46a701edc9607431bc.html"}
+  - {title: "SAP Help (SAP GUI 2023): Export to Local File", url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b1c834a22d05483b8a75710743b5ff26/4d6204f5d79751b0e10000000a42189c.html"}
+  - {title: "SAP Help (SAP GUI 2023 FPS02): Exporting Lists", url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b1c834a22d05483b8a75710743b5ff26/4d61420d95fe30afe10000000a42189b.html"}
+  - {title: "SAP Support Content: Introduction to ABAP List Processing & Common Issues (System > List > Save > Local File, encoding)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/abaptools/3353527268.html"}
+last_verified: 2026-10-08

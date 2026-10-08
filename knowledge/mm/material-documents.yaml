@@ -1,0 +1,58 @@
+id: material-documents
+module: MM
+area: inventario
+names:
+  es: Ver los movimientos de un material (lista de documentos material)
+  en: Material document list (goods movements history)
+tcode: MB51
+related_tcodes: [MIGO, MMBE, MB5B]
+keywords:
+  es: [movimientos, historial, entradas y salidas, documentos material, kardex, quien movio, cuando entro, clase de movimiento, recepciones hechas, traspasos realizados]
+  en: [material documents, material document list, goods movements, movement history, movement type, who posted, when received]
+summary: >-
+  Lista los documentos material: cada entrada, salida o traspaso que movió stock. Sirve para
+  saber qué pasó con un material (cuándo entró, quién lo sacó, con qué clase de movimiento).
+s4hana_notes: >-
+  MB51 sigue en S/4HANA. Los datos ya no están en MKPF (cabecera) y MSEG (posiciones) como en
+  ECC: en S/4HANA ambas cosas viven en una sola tabla, MATDOC. La alternativa Fiori es
+  "Material Documents Overview" (F1077).
+fiori_app:
+  name: Material Documents Overview
+  id: F1077
+  note: Lista posiciones de documentos material y permite abrir el detalle de cada uno.
+steps:
+  - Escribe MB51 y presiona Enter.
+  - Llena lo que sepas, por ejemplo Material, Centro (Plant), Almacén (Storage Location), Clase de movimiento (Movement Type; 101 = entrada por pedido) y el rango de Fecha de contabilización (Posting Date).
+  - Presiona Ejecutar (F8).
+  - Cada línea es un movimiento con número de documento, fecha, clase de movimiento, cantidad y usuario.
+  - Doble clic en una línea abre el documento material completo.
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Material que quieres rastrear.}
+  - {label: Clase de movimiento (Movement Type), technical: BWART, meaning: "Código de 3 dígitos que dice qué tipo de movimiento fue (101, 311, 351…)."}
+  - {label: Fecha de contabilización (Posting Date), technical: BUDAT, meaning: Fecha con la que se registró el movimiento.}
+  - {label: Documento material (Material Document), technical: MBLNR, meaning: Número del documento que registró el movimiento.}
+tables:
+  - {name: MKPF, description: "ECC: cabecera del documento material."}
+  - {name: MSEG, description: "ECC: posiciones (líneas) del documento material."}
+  - {name: MATDOC, description: "S/4HANA: cabecera y posiciones juntas en una sola tabla."}
+  - {name: T156, description: Clases de movimiento.}
+common_errors:
+  - error: No salen resultados aunque sabes que hubo movimientos.
+    meaning: El rango de fechas es muy corto o hay un filtro de más (centro, almacén, clase de movimiento).
+    what_to_do: Amplía las fechas y quita filtros uno por uno.
+    verified: false
+  - error: La consulta tarda muchísimo.
+    meaning: Buscaste sin filtros sobre años de movimientos.
+    what_to_do: Pon siempre material o centro, y un rango de fechas acotado.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Campos técnicos BWART, BUDAT y MBLNR: MBLNR aparece en las fuentes; BWART y BUDAT no se encontraron en las páginas revisadas."
+sources:
+  - {title: "SAP Help (ERP): Reporting in Inventory Management, Material document list (MB51)", url: "https://help.sap.com/docs/SAP_ERP/96bf9ad642cf4b26a29595e3d573fb8c/5863bd534f22b44ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2602.3): Navigation to Material Documents Overview App (F1077)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/02f54de300db4dc586c4a58fbe43ac76.html?version=2602.10"}
+  - {title: "SAP Help (S/4HANA on-premise): Purging and Precompacting of Material Document Data (MIGO, MB51, MATDOC)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/677f0a4e71d7487ebb70683014761789/7a29ed568b0c41828a4e2c8da9ae1082.html"}
+  - {title: "SAP Support Content: New Simplified Data Model (NSDM) for Inventory Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/erpscm/3362167285.html"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing (MKPF, MSEG, T156, MBLNR)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

@@ -1,0 +1,53 @@
+id: purchase-requisition-display
+module: MM
+area: compras
+names:
+  es: Ver una solicitud de pedido y su estado
+  en: Display purchase requisition
+tcode: ME53N
+related_tcodes: [ME51N, ME52N, ME5A]
+keywords:
+  es: [ver solicitud de pedido, consultar solicitud de pedido, estado de la solicitud, ya compraron mi solicitud, requisicion aprobada, ver requisicion, solped estado]
+  en: [display purchase requisition, view pr, pr status, requisition status, was my requisition ordered]
+summary: >-
+  Abre una solicitud de pedido solo para consultar: qué se pidió, si ya está aprobada
+  (liberada) y si Compras ya la convirtió en pedido.
+s4hana_notes: >-
+  ME53N existe en ECC y en S/4HANA. En Fiori se consulta con "Manage Purchase Requisitions -
+  Professional" (F2229). Para cambiarla se usa ME52N.
+fiori_app:
+  name: Manage Purchase Requisitions - Professional
+  id: F2229
+  note: Busca la solicitud por número y abre el detalle.
+steps:
+  - Escribe ME53N y presiona Enter.
+  - "Si muestra otra, usa Otra solicitud de pedido (Other Purchase Requisition) y escribe el número."
+  - Revisa las posiciones (material, cantidad, fecha, centro).
+  - "Selecciona una posición y revisa la pestaña de estado (Status): ahí se ve si ya se creó un pedido para ella."
+  - "Si tu empresa usa aprobaciones, la pestaña Estrategia de liberación (Release Strategy) muestra quién falta por aprobar."
+key_fields:
+  - {label: Solicitud de pedido (Purchase Requisition), technical: EBAN-BANFN, meaning: Número de la solicitud.}
+tables:
+  - {name: EBAN, description: Solicitud de pedido.}
+  - {name: EBKN, description: Imputación de la solicitud.}
+common_errors:
+  - error: La solicitud se ve como firme (firmed) en MD04 pero no en ME53N.
+    meaning: Es un caso conocido cuando la solicitud viene de un sistema externo de planificación.
+    what_to_do: Consulta a tu usuario clave; SAP tiene documentación de soporte sobre este caso.
+    verified: true
+  - error: El número no existe.
+    meaning: Puede ser un pedido de compras (se ve en ME23N), no una solicitud.
+    what_to_do: Prueba el número en ME23N.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Nombres exactos de las pestañas Estado y Estrategia de liberación en la posición."
+    - Campo técnico EBAN-BANFN.
+sources:
+  - {title: "SAP Help (ERP): Process Purchase Requisition (ME51N, ME52N, ME53N)", url: "https://help.sap.com/docs/SAP_ERP/6cfdc7caaef746cd9c7543e32e7e87c0/ed06b753128eb44ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA 2025 FPS01): International Trade Compliance Checks for Purchase Requisitions (ME53N)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/fd31fff09a82412ba2e181b67f1757d2.html?version=2025.001"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Manage Purchase Requisitions - Professional (F2229)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/3f98c7ca9c22a50ae323aefa23deb3c8/f08274e0fe364e278181f061bab43cc0.html"}
+  - {title: "SAP Support Content: Purchase Requisition (firmed en MD04 pero no en ME53N)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168187.html"}
+  - {title: "SAP Support Content: Materials Management Tables (EBAN, EBKN)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08

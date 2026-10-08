@@ -1,0 +1,62 @@
+id: purchase-order-change
+module: MM
+area: compras
+names:
+  es: Modificar una orden de compra (pedido de compras)
+  en: Change purchase order
+tcode: ME22N
+related_tcodes: [ME21N, ME23N]
+keywords:
+  es: [modificar orden de compra, cambiar orden de compra, editar pedido, cambiar pedido, cambiar cantidad, cambiar fecha de entrega, cambiar precio, borrar posicion, anular posicion, bloquear posicion]
+  en: [change purchase order, edit po, modify po, change quantity, change delivery date, change price, delete item]
+summary: >-
+  Cambia un pedido de compras ya guardado: cantidades, fechas, precios, o marca posiciones
+  para borrar o bloquear. Los cambios quedan registrados en el historial del pedido.
+s4hana_notes: >-
+  ME22N existe en ECC y en S/4HANA. En Fiori se modifica desde "Manage Purchase Orders"
+  (F0842A). Si el pedido ya fue aprobado (liberado), un cambio importante puede hacer que
+  vuelva a necesitar aprobación, según cómo lo tenga configurado tu empresa.
+fiori_app:
+  name: Manage Purchase Orders
+  id: F0842A
+  note: Abre el pedido y usa Editar.
+steps:
+  - Escribe ME22N y presiona Enter.
+  - "Si se abre otro pedido, usa el botón Otro pedido (Other Purchase Order) y escribe el número."
+  - "Ve a la posición que quieres cambiar y modifica Cantidad, Fecha de entrega o Precio. Para quitar una posición, selecciónala y usa el botón Borrar (papelera)."
+  - Presiona Verificar (Check) y corrige los mensajes en rojo.
+  - Guarda (Ctrl+S).
+  - "Para ver qué se cambió y quién, en ME23N usa el menú Entorno (Environment) > Modificaciones de cabecera (Header Changes)."
+key_fields:
+  - {label: Pedido (Purchase Order), technical: EKKO-EBELN, meaning: Número del pedido a cambiar.}
+  - {label: Cantidad (PO Quantity), technical: "", meaning: Cantidad pedida en la posición.}
+  - {label: Fecha de entrega (Delivery Date), technical: "", meaning: Fecha en que debe llegar.}
+tables:
+  - {name: EKKO, description: Cabecera del pedido.}
+  - {name: EKPO, description: Posiciones del pedido.}
+  - {name: EKET, description: Repartos (fechas y cantidades).}
+  - {name: EKBE, description: Historial (entradas y facturas ya registradas).}
+common_errors:
+  - error: No te deja bajar la cantidad.
+    meaning: Ya se recibió (o facturó) más de lo que intentas dejar.
+    what_to_do: Revisa el historial del pedido (pestaña Historial de pedido) antes de cambiar.
+    verified: false
+  - error: El pedido está siendo modificado por otro usuario.
+    meaning: Otra persona lo tiene abierto en modo cambio.
+    what_to_do: Espera y vuelve a intentar.
+    verified: false
+  - error: Después de guardar, el pedido volvió a quedar pendiente de aprobación.
+    meaning: El cambio activó otra vez la estrategia de liberación de tu empresa.
+    what_to_do: Avisa a quien aprueba los pedidos.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Ruta exacta del menú de cambios en ME23N (Entorno > Modificaciones de cabecera): ubicación habitual, no confirmada en la fuente."
+sources:
+  - {title: "SAP Help (ERP): Purchasing Applications in Single-Screen Transactions (ME22N)", url: "https://help.sap.com/docs/SAP_ERP/967e1c2a6a8c4183b7e07d28e7574445/787db65334e6b54ce10000000a174cb4.html"}
+  - {title: "SAP Support Content: Change logs in PR and PO (ME21N, ME22N, ME23N)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362167925.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Output Messages for Archived Purchase Orders (ME21N/ME22N/ME23N)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/3df3553c16b84b078b6c529bb728f9b6.html?version=2608.00"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Consumable Purchasing (Manage Purchase Orders F0842A)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/f09d278d3472a69eb576f1ed768b35a1/f5c1199f35244f83b353f48af2e7625c.html"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

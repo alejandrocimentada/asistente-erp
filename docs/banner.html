@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- Source for docs/banner.png (Spanish) and docs/banner.en.png (open with #en).
+     Render at 1600x640, e.g. with headless Edge/Chrome:
+     msedge --headless --window-size=1600,640 --screenshot=banner.png docs/banner.html -->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Asistente ERP banner</title>
+<style>
+  :root {
+    --ink: #1b1f23; --muted: #5b6570; --line: #e3e7ea; --card: #ffffff; --bg: #f5f7f9;
+    --accent: #8fd3e2; --accent-ink: #1f5f6e; --ok: #2e7d32; --soft: #eef8fa;
+    --mono: "Cascadia Mono", "Cascadia Code", Consolas, "SFMono-Regular", Menlo, monospace;
+    --sans: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 640px; overflow: hidden; background: var(--bg); }
+  body { font-family: var(--sans); color: var(--ink); padding: 28px; }
+  .card {
+    position: relative; width: 100%; height: 100%; background: var(--card);
+    border: 1.5px solid var(--line); border-radius: 28px; overflow: hidden;
+    display: grid; grid-template-columns: 760px 1fr; grid-template-rows: 1fr 64px;
+  }
+  .left { padding: 0 0 8px 72px; display: flex; flex-direction: column; justify-content: center; }
+  .label { align-self: flex-start; font-family: var(--mono); font-size: 18px; letter-spacing: .18em; color: var(--accent-ink); display: flex; align-items: center; gap: 12px; }
+  .label::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--accent); }
+  h1 { font-size: 88px; font-weight: 750; letter-spacing: -.02em; margin-top: 22px; line-height: 1; }
+  .subtitle { font-size: 30px; color: var(--muted); margin-top: 20px; max-width: 640px; line-height: 1.25; }
+  .pills { display: flex; align-self: flex-start; gap: 12px; margin-top: 40px; }
+  .pill { font-family: var(--mono); font-size: 19px; padding: 9px 18px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--soft); }
+  .pill b { color: var(--accent-ink); font-weight: 600; }
+
+  .right { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 0 64px 8px 0; }
+  .q {
+    align-self: flex-end; max-width: 560px; background: #f1f3f5; border-radius: 22px 22px 6px 22px;
+    padding: 18px 24px; font-size: 25px;
+  }
+  .a {
+    align-self: flex-start; width: 640px; border: 1.5px solid var(--line); border-radius: 22px 22px 22px 6px;
+    padding: 22px 26px; background: #fff; box-shadow: 0 6px 24px rgba(20, 40, 50, .06);
+  }
+  .tcode { display: flex; align-items: baseline; gap: 14px; }
+  .tcode b { font-family: var(--mono); font-size: 40px; color: var(--accent-ink); }
+  .tcode span { font-size: 21px; color: var(--muted); }
+  .steps { margin-top: 14px; display: grid; gap: 9px; font-size: 20px; }
+  .steps div { display: flex; gap: 12px; align-items: center; }
+  .steps i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; background: var(--soft); color: var(--accent-ink);
+             display: grid; place-items: center; font-family: var(--mono); font-size: 15px; font-weight: 700; flex: none; }
+  .meta { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .meta span { font-family: var(--mono); font-size: 15px; color: var(--muted); border: 1.5px solid var(--line); border-radius: 8px; padding: 4px 10px; }
+  .meta .src { color: var(--ok); border-color: #cfe8d0; background: #f3faf3; }
+
+  .strip {
+    grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding-left: 72px;
+    background: var(--accent); font-family: var(--mono); font-size: 19px; letter-spacing: .12em; color: #0f3540; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <section class="left">
+    <div class="label" data-es="AGENT SKILL · PARA SAP MM" data-en="AGENT SKILL · FOR SAP MM"></div>
+    <h1>Asistente ERP</h1>
+    <p class="subtitle" data-es="Pregunta cómo se hace en SAP y recibe la transacción y los pasos"
+       data-en="Ask how to do it in SAP and get the transaction and the steps"></p>
+    <div class="pills">
+      <span class="pill"><b>ECC</b> · S/4HANA</span>
+      <span class="pill" data-es="GUI · Fiori" data-en="GUI · Fiori"></span>
+      <span class="pill" data-es="Z · tus nombres" data-en="Z · your names"></span>
+    </div>
+  </section>
+
+  <section class="right">
+    <div class="q" data-es="¿Cómo veo el stock en todas las tiendas?" data-en="How do I see stock across all stores?"></div>
+    <div class="a">
+      <div class="tcode"><b>MMBE</b><span data-es="Resumen de stock" data-en="Stock overview"></span></div>
+      <div class="steps">
+        <div><i>1</i><span data-es="Escribe MMBE y presiona Enter" data-en="Type MMBE and press Enter"></span></div>
+        <div><i>2</i><span data-es="Material; deja Centro vacío para ver todos" data-en="Material; leave Plant empty to see all"></span></div>
+        <div><i>3</i><span data-es="Ejecuta (F8) y lee el árbol" data-en="Execute (F8) and read the tree"></span></div>
+      </div>
+      <div class="meta">
+        <span>MARD · MATDOC</span>
+        <span>Fiori F1076</span>
+        <span class="src">✓ help.sap.com</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip" data-es="🔒 NO SE CONECTA A SAP: SOLO EXPLICA, CON FUENTES OFICIALES"
+       data-en="🔒 NEVER CONNECTS TO SAP: IT ONLY EXPLAINS, WITH OFFICIAL SOURCES"></div>
+</div>
+<script>
+  const lang = location.hash === "#en" ? "en" : "es";
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-es]").forEach(el => { el.textContent = el.dataset[lang]; });
+</script>
+</body>
+</html>

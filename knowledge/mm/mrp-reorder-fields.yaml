@@ -1,0 +1,64 @@
+id: mrp-reorder-fields
+module: MM
+area: materiales
+names:
+  es: Configurar stock mínimo, punto de pedido y stock de seguridad de un material
+  en: Reorder point, safety stock and minimum stock fields (MRP views)
+tcode: MM02
+related_tcodes: [MM03, MD04]
+keywords:
+  es: [stock minimo, minimo, punto de pedido, punto de reorden, reorden, stock de seguridad, stock maximo, vista mrp, tipo de planificacion, cuando volver a pedir, reabastecimiento, planificacion por punto de pedido]
+  en: [minimum stock, reorder point, reorder level, safety stock, maximum stock, mrp view, mrp type, replenishment, reorder point planning]
+summary: >-
+  El "stock mínimo" en SAP se maneja con el punto de pedido (reorder point) y el stock de
+  seguridad, en las vistas MRP del material. Cuando el stock baja del punto de pedido, la
+  planificación (MRP) propone comprar o fabricar.
+s4hana_notes: >-
+  Igual en ECC y S/4HANA: se mantiene en las vistas MRP 1 y MRP 2 del material (MM02) o en la
+  app "Manage Product Master Data" (F1602), y se guarda en la tabla MARC. Para que el punto de
+  pedido funcione, el tipo de planificación (MRP type) debe ser de punto de pedido, por ejemplo
+  VB (manual) o VM (automático).
+fiori_app:
+  name: Manage Product Master Data
+  id: F1602
+  note: Los mismos campos de planificación están en la sección de planificación (MRP) del producto.
+steps:
+  - Escribe MM02 y presiona Enter (para solo mirar los valores usa MM03).
+  - Escribe el Material, presiona Enter y marca las vistas MRP 1 y MRP 2.
+  - Escribe el Centro (Plant) y presiona Enter.
+  - "En MRP 1, revisa el Tipo de planificación (MRP type). Para punto de pedido manual suele usarse VB; con VM el sistema calcula el punto de pedido y el stock de seguridad a partir del consumo pasado."
+  - "Con VB, escribe el Punto de pedido (Reorder Point): cuando el stock baje de ese número, MRP propone reponer."
+  - "Si aplica, define el Tamaño de lote (Lot size) y, si usas reposición hasta un máximo, el Stock máximo (Maximum stock level)."
+  - En MRP 2 escribe el Stock de seguridad (Safety Stock), la reserva para imprevistos.
+  - Guarda (Ctrl+S). El cambio se nota en la siguiente corrida de MRP y en MD04.
+key_fields:
+  - {label: Tipo de planificación (MRP Type), technical: MARC-DISMM, meaning: "Cómo se planifica el material. VB = punto de pedido manual; VM = punto de pedido automático."}
+  - {label: Punto de pedido (Reorder Point), technical: MARC-MINBE, meaning: Nivel de stock que dispara la reposición.}
+  - {label: Stock de seguridad (Safety Stock), technical: MARC-EISBE, meaning: Colchón para imprevistos de consumo o retrasos.}
+  - {label: Stock máximo (Maximum stock level), technical: MARC-MABST, meaning: Tope cuando el lote es "reponer hasta el máximo".}
+  - {label: Tamaño de lote (Lot size), technical: MARC-DISLS, meaning: Regla para calcular cuánto pedir.}
+  - {label: Planificador (MRP Controller), technical: MARC-DISPO, meaning: Persona o grupo responsable de planificar el material.}
+  - {label: Plazo de entrega previsto (Planned Delivery Time), technical: MARC-PLIFZ, meaning: Días que tarda en llegar una compra.}
+tables:
+  - {name: MARC, description: Datos del material por centro; aquí se guardan todos los campos MRP de esta entrada.}
+common_errors:
+  - error: Pusiste un punto de pedido pero MRP nunca propone comprar.
+    meaning: El tipo de planificación no es de punto de pedido, o el material no se incluye en la corrida de MRP.
+    what_to_do: Revisa que el MRP type sea de punto de pedido (por ejemplo VB) y pregunta al planificador cuándo corre MRP en tu empresa.
+    verified: true
+  - error: El campo de punto de pedido no se puede editar.
+    meaning: Con planificación automática (VM) el sistema calcula el valor, o tu empresa usa otro tipo de planificación.
+    what_to_do: Confirma con el planificador o con tu usuario clave qué tipo de planificación usan.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "En qué vista exacta está cada campo (MRP 1 o MRP 2): la fuente confirma MRP 1 para el tipo de planificación; para los demás campos la ubicación es la habitual, pero no se confirmó."
+    - "Que el campo de punto de pedido quede bloqueado con VM: es la conducta habitual, pero depende de la configuración del tipo de planificación."
+sources:
+  - {title: "SAP Help (ERP): Net Requirements Calculation for Reorder Point Planning (MRP 1, VB/VM)", url: "https://help.sap.com/docs/SAP_ERP/66326f67e0e1416d83c0fdfa4060189d/b697b6535fe6b74ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA on-premise): Reorder Point Planning", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/fe39e10a9a864a8f8dc9537704f0fa13/5697b6535fe6b74ce10000000a174cb4.html"}
+  - {title: "SAP Help (ERP Retail): Material and Plant Attributes (MARC-DISMM, MINBE, EISBE, MABST, DISLS, DISPO, PLIFZ)", url: "https://help.sap.com/docs/SAP_ERP/beef6a3baaa149d18944b7170c427838/a785d45556af7b43e10000000a4450e5.html"}
+  - {title: "SAP Help (Safety Stock and Buffer Simulation): MARC-EISBE, MARC-MINBE", url: "https://help.sap.com/docs/SCMCSSSS/1d3a3ab8bcca43c79a75916ea2e51f60/d6377af6e62144919cac68e1274fd353.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Safety Stock Methods", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/c6f52b36785c42e2a3296e94d15fd753.html"}
+last_verified: 2026-10-08

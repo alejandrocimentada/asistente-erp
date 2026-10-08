@@ -1,0 +1,61 @@
+id: stock-transport-order
+module: MM
+area: movimientos
+names:
+  es: Pedido de traslado entre centros (stock transport order)
+  en: Stock transport order (plant to plant)
+tcode: ME21N
+related_tcodes: [MIGO, VL10B, VL02N, MB51, MMBE]
+keywords:
+  es: [pedido de traslado, orden de traslado, traslado entre centros, enviar mercancia a otra tienda, abastecer sucursal, transferencia entre plantas, stock en transito, sto, ub, 351, 641]
+  en: [stock transport order, sto, plant to plant transfer, stock in transit, replenish store, document type ub, movement type 351, movement type 641]
+summary: >-
+  Un pedido de traslado es un pedido de compras "interno": un centro le pide mercancía a otro.
+  La salida en el centro que envía deja el stock "en tránsito", y la entrada en el centro que
+  recibe lo pasa a su stock. Se usa cuando el traslado se quiere planificar, seguir o
+  transportar con entrega.
+s4hana_notes: >-
+  El proceso es el mismo en ECC y S/4HANA: se crea con ME21N y las salidas/entradas se
+  registran con MIGO (o con entregas de SD). En S/4HANA las antiguas MB1B/MB0A ya no se usan.
+  En la documentación revisada no se encontró una app Fiori específica para crear pedidos de
+  traslado (ver sin_verificar).
+fiori_app: null
+steps:
+  - "Crea el pedido: ME21N con la clase de pedido UB (pedido de traslado). En lugar de proveedor escribe el Centro suministrador (Supplying Plant)."
+  - En las posiciones escribe Material, Cantidad, Centro receptor (Plant) y Fecha de entrega. Guarda y anota el número.
+  - "Sin entrega (sin SD): en el centro que envía, registra la salida en MIGO: Salida de mercancías (Goods Issue) > Pedido (Purchase Order), clase de movimiento 351. El stock queda en tránsito."
+  - "Con entrega: crea la entrega de salida (por ejemplo con VL10B) y contabiliza la salida de mercancías en la entrega (VL02N). La clase de movimiento es 641."
+  - "En el centro que recibe: MIGO > Entrada de mercancías (Goods Receipt) > Pedido, con el número del pedido de traslado; clase de movimiento 101."
+  - Revisa el stock en tránsito y el resultado con MMBE o MB51.
+key_fields:
+  - {label: Clase de pedido (Order Type), technical: EKKO-BSART, meaning: "UB = pedido de traslado (stock transport order). Entre sociedades distintas se usa NB."}
+  - {label: Centro suministrador (Supplying Plant), technical: "", meaning: Centro que envía la mercancía.}
+  - {label: Clase de movimiento (Movement Type), technical: BWART, meaning: "351 salida sin entrega; 641 salida con entrega; 643/645 entre sociedades; 101 entrada en el centro receptor."}
+tables:
+  - {name: EKKO, description: Cabecera del pedido de traslado.}
+  - {name: EKPO, description: Posiciones del pedido de traslado.}
+  - {name: EKBE, description: Historial del pedido (salidas y entradas).}
+  - {name: MATDOC, description: "S/4HANA: documentos material de salida y entrada."}
+  - {name: MSEG, description: "ECC: posiciones de documentos material."}
+common_errors:
+  - error: El stock no aparece en el centro receptor después de la salida.
+    meaning: Es normal. Después de la salida (351/641) el stock está en tránsito hasta que se registra la entrada (101).
+    what_to_do: Registra la entrada en MIGO en el centro receptor.
+    verified: true
+  - error: No se puede crear la entrega para el pedido de traslado.
+    meaning: Falta configuración de traslados (tipo de entrega, punto de expedición) para esa combinación de centros.
+    what_to_do: Esto es configuración; consúltalo con tu usuario clave o el equipo de SAP.
+    verified: false
+verification:
+  status: parcial
+  sin_verificar:
+    - App Fiori para crear pedidos de traslado (no se encontró en la documentación revisada).
+    - "Pasos exactos de la entrega con VL10B y VL02N: los códigos aparecen en la documentación, pero el flujo detallado depende de la configuración de cada empresa."
+sources:
+  - {title: "SAP Help (ERP): Stock Transfer Using a Stock Transport Order (UB/NB, 351, 641, 643/645, 101)", url: "https://help.sap.com/docs/SAP_ERP/96bf9ad642cf4b26a29595e3d573fb8c/5213b953495bb44ce10000000a174cb4.html"}
+  - {title: "SAP Support Content: Stock in Transfer x Stock in Transit (351, 641, 101)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/erpscm/3362168094.html"}
+  - {title: "SAP Help (ERP A&D): Cross-Plant Goods Movement (351/352, 101/102)", url: "https://help.sap.com/docs/SAP_ERP/cfff13ea14f3430488af41bbc02dbb69/82f4c353b677b44ce10000000a174cb4.html"}
+  - {title: "SAP Support Content: Quick view of the Stock Transport Order customizing in the MM area", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168148.html"}
+  - {title: "SAP Help (S/4HANA 2025 FPS02): Generic Article Selection in Reports (VL10B)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/42e8e557f828ef32e10000000a441470.html"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): SAP EWM Integration, Stock Transport Orders (VL02N)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/d84ccebf82f37b7457dab6fecb365dc2/74a6debc0516487e91c567225efff595.html"}
+last_verified: 2026-10-08

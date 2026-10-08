@@ -1,0 +1,62 @@
+id: stock-overview
+module: MM
+area: inventario
+names:
+  es: Ver el stock de un material en todos los centros y almacenes
+  en: Stock overview of a material across plants and storage locations
+tcode: MMBE
+related_tcodes: [MB52, MB51, MD04]
+keywords:
+  es: [stock, existencias, inventario, cuanto hay, disponible, todos los centros, todas las tiendas, tiendas, sucursales, almacenes, bodegas, resumen de stock, un material, lote]
+  en: [stock overview, stock, inventory, on hand, available, all plants, all stores, storage locations, warehouses, single material, batch]
+summary: >-
+  Muestra cuánto hay de UN material en toda la estructura de la empresa (sociedad, centro,
+  almacén y lote), separado por tipo de stock: libre utilización, en control de calidad,
+  bloqueado, etc. Es la forma más rápida de responder "¿cuánto tenemos de esto y dónde?".
+s4hana_notes: >-
+  MMBE sigue existiendo en S/4HANA (on-premise y Cloud, donde aparece como la app
+  "Display Stock Overview (MMBE)"). La diferencia está por dentro: en S/4HANA las cantidades
+  no se guardan en MARD/MARC, sino que se calculan al momento a partir de los documentos
+  material de la tabla MATDOC. La alternativa Fiori es "Stock - Single Material" (F1076).
+fiori_app:
+  name: Stock - Single Material
+  id: F1076
+  note: Muestra el stock de un material por centro y almacén. Para varios materiales a la vez existe "Stock - Multiple Materials" (F1595).
+steps:
+  - Escribe MMBE en el campo de comandos (arriba a la izquierda) y presiona Enter.
+  - En "Material" escribe el código del material. Si solo te interesa una tienda o almacén, llena también "Centro" (Plant) y "Almacén" (Storage Location); si los dejas vacíos verás todos.
+  - Si el material se maneja por lotes y quieres verlos, marca la casilla de lote (Batch); si no la marcas, el detalle llega solo hasta almacén.
+  - Presiona Ejecutar (F8).
+  - "Lee el árbol: cada nivel (sociedad → centro → almacén → lote) muestra sus cantidades. La columna de libre utilización (Unrestricted use) es lo que se puede usar o vender ya."
+  - Doble clic sobre una línea abre más detalle de ese nivel.
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Código del material que quieres consultar.}
+  - {label: Centro (Plant), technical: WERKS, meaning: "Planta, tienda o sucursal. En SAP cada una es un centro."}
+  - {label: Almacén (Storage Location), technical: LGORT, meaning: Lugar físico dentro del centro donde se guarda el stock.}
+  - {label: Libre utilización (Unrestricted-use), technical: LABST, meaning: Stock disponible para usar o vender.}
+  - {label: Control de calidad (Quality inspection), technical: "", meaning: Stock que espera revisión de calidad; todavía no se puede usar.}
+tables:
+  - {name: MARD, description: "Datos del material por almacén. En ECC guarda las cantidades por almacén (por ejemplo LABST = libre utilización)."}
+  - {name: MARC, description: Datos del material por centro.}
+  - {name: MCHB, description: Stock por lote.}
+  - {name: MATDOC, description: "Solo S/4HANA: tabla única de documentos material; de aquí se calcula el stock al momento."}
+common_errors:
+  - error: No aparece ningún stock o sale el mensaje de que no hay datos.
+    meaning: El material no tiene stock en los centros o almacenes que pediste, o no existe en ese centro.
+    what_to_do: Deja vacíos Centro y Almacén para ver todo, y revisa que el código del material esté bien escrito.
+    verified: false
+  - error: No ves algunos centros o almacenes que sabes que existen.
+    meaning: "Puede ser un tema de permisos: tu usuario solo tiene autorización para ciertos centros."
+    what_to_do: Pregúntale a tu usuario clave (key user) de SAP o al equipo de seguridad.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar: []
+sources:
+  - {title: "SAP Help: Stock Overview: Company Code/Plant/Storage Location/Batch (MMBE)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/b8fbc492055a4801b92456ff68a6d971.html"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Display Stock Overview (MMBE)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/f264aef037b722b692ddb790c3068b7b/d5cbc8815fe546edbc8a456ee0510d57.html"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Stock - Single Material (F1076)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/986790a117ad8f3a43b1c0d788cc3fc7/04d4bd76056149bbb99c89a71a66ceab.html"}
+  - {title: "SAP Support Content: New Simplified Data Model (NSDM) for Inventory Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/erpscm/3362167285.html"}
+  - {title: "SAP Support Content: Materials Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing (campos de MARD)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

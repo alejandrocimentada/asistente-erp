@@ -1,0 +1,55 @@
+id: po-list-by-vendor
+module: MM
+area: compras
+names:
+  es: Lista de órdenes de compra por proveedor
+  en: Purchase orders by vendor (supplier)
+tcode: ME2L
+related_tcodes: [ME2M, ME2N, ME23N]
+keywords:
+  es: [ordenes de compra por proveedor, pedidos por proveedor, lista de pedidos, lo que le hemos comprado a, pedidos abiertos de un proveedor, pendientes de entrega proveedor, reporte de compras proveedor, ver pedidos de un proveedor, ordenes de compra de un proveedor]
+  en: [purchase orders by vendor, purchase orders by supplier, po list vendor, open orders supplier, purchasing documents per vendor]
+summary: >-
+  Lista los documentos de compras (pedidos) de uno o varios proveedores. Con el alcance
+  adecuado muestra solo lo que está pendiente de recibir o de facturar.
+s4hana_notes: >-
+  En ECC es "Purchasing Documents per Vendor". En S/4HANA el proveedor se llama "supplier".
+  La alternativa Fiori para revisar posiciones de pedidos es "Monitor Purchase Order Items"
+  (F2358). No se encontró en la documentación revisada una página que confirme ME2L en
+  S/4HANA (ver sin_verificar); antes de recomendarla en S/4HANA, ofrece también F2358.
+fiori_app:
+  name: Monitor Purchase Order Items
+  id: F2358
+  note: Lista y filtra posiciones de pedidos, por ejemplo por proveedor.
+steps:
+  - Escribe ME2L y presiona Enter.
+  - Escribe el Proveedor (Vendor) o un rango de proveedores.
+  - "Opcional: llena Organización de compras (Purchasing Organization), Centro (Plant) o fechas."
+  - "En Alcance de lista (Scope of List) o Parámetro de selección (Selection Parameters) puedes pedir solo lo pendiente; por ejemplo WE101 suele mostrar lo pendiente de recibir. Los valores disponibles dependen de tu sistema."
+  - Presiona Ejecutar (F8).
+  - Doble clic en un pedido lo abre en ME23N.
+key_fields:
+  - {label: Proveedor (Vendor/Supplier), technical: LIFNR, meaning: Proveedor cuyos pedidos quieres ver.}
+  - {label: Organización de compras (Purchasing Org.), technical: EKORG, meaning: Filtra por la unidad de compras.}
+  - {label: Parámetro de selección (Selection Parameters), technical: SELPA, meaning: Filtra pedidos pendientes de recibir o de facturar.}
+tables:
+  - {name: EKKO, description: Cabecera del pedido.}
+  - {name: EKPO, description: Posiciones del pedido.}
+  - {name: LFA1, description: Datos generales del proveedor.}
+common_errors:
+  - error: No salen pedidos.
+    meaning: El proveedor está mal escrito o pusiste un parámetro de selección muy restrictivo.
+    what_to_do: Quita el parámetro de selección y vuelve a ejecutar.
+    verified: false
+verification:
+  status: parcial
+  sin_verificar:
+    - Que ME2L siga disponible en S/4HANA (solo se encontró documentación de ECC).
+    - Valores del parámetro de selección (por ejemplo WE101) y su campo técnico SELPA.
+    - Campo técnico LIFNR del proveedor (EKORG sí está en las fuentes).
+sources:
+  - {title: "SAP Help (ERP): Lists of Purchase Orders (MM-PUR), ME2L Purchase orders by vendor", url: "https://help.sap.com/docs/SAP_ERP/6cfdc7caaef746cd9c7543e32e7e87c0/8d06b753128eb44ce10000000a174cb4.html"}
+  - {title: "SAP Help (ERP): Reporting in Purchasing (ME2L Purchasing Documents per Vendor)", url: "https://help.sap.com/docs/SAP_ERP/349992fb60854a62a264d716ad5c8f54/a1e5e052427c9d36e10000000a44538d.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2608): Monitor Purchase Order Items (F2358)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/b992de09d8574e38bf6bda87472266e0.html?version=2608.00"}
+  - {title: "SAP Support Content: Commonly Used Tables in Purchasing", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168418.html"}
+last_verified: 2026-10-08

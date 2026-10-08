@@ -1,0 +1,61 @@
+id: stock-requirements-list
+module: MM
+area: inventario
+names:
+  es: Ver stock, necesidades y entradas futuras de un material (lista de necesidades/stocks)
+  en: Stock/requirements list
+tcode: MD04
+related_tcodes: [MMBE, MD05, MD07]
+keywords:
+  es: [necesidades, requerimientos, faltantes, cobertura, cuando llega, pedidos pendientes, demanda, planificacion, mrp, va a alcanzar, quiebre de stock, entradas futuras]
+  en: [stock requirements list, requirements, shortage, coverage, mrp, demand, incoming, when will it arrive, planned receipts, stockout]
+summary: >-
+  Muestra en una sola línea de tiempo el stock actual del material y todo lo que lo va a
+  aumentar (pedidos, solicitudes, órdenes planificadas) o disminuir (reservas, pedidos de
+  clientes). Responde "¿me va a alcanzar?" y "¿cuándo llega lo que pedimos?".
+s4hana_notes: >-
+  MD04 sigue en S/4HANA (en Cloud aparece como "Monitor Stock / Requirements List (MD04)").
+  Las apps Fiori relacionadas son "Manage Material Coverage" (F0251) y su sucesora
+  "Manage Material Coverage" (F0251A), útiles para ver faltantes de muchos materiales a la vez.
+fiori_app:
+  name: Manage Material Coverage
+  id: F0251A
+  note: Sucesora de F0251. Para ver un solo material con el detalle de MD04, en Cloud se usa la app Monitor Stock / Requirements List (MD04).
+steps:
+  - Escribe MD04 y presiona Enter.
+  - Llena Material y Centro (Plant) y presiona Enter.
+  - Lee la lista de arriba hacia abajo. La primera línea es el stock actual; las siguientes son entradas (pedidos, solicitudes) y salidas (reservas, ventas) ordenadas por fecha.
+  - Mira la columna de cantidad disponible. Si en alguna fecha queda resaltada en rojo, habrá faltante en esa fecha.
+  - Doble clic en un elemento (por ejemplo un pedido) muestra su detalle.
+  - La lista es una foto del momento; usa el botón de refrescar si alguien acaba de crear un pedido.
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Material a revisar.}
+  - {label: Centro (Plant), technical: WERKS, meaning: La planificación se ve por centro.}
+  - {label: Elemento MRP (MRP element), technical: "", meaning: "Tipo de línea: pedido, solicitud, reserva, stock, etc."}
+  - {label: Cantidad disponible (Available quantity), technical: "", meaning: Stock proyectado después de cada entrada o salida.}
+tables:
+  - {name: MARC, description: Datos del material por centro, incluidos los parámetros de planificación (MRP).}
+  - {name: EBAN, description: Solicitudes de pedido (entradas planificadas).}
+  - {name: EKET, description: Repartos de pedidos de compra (fechas y cantidades de entrega).}
+  - {name: RESB, description: Reservas y necesidades secundarias (salidas planificadas).}
+common_errors:
+  - error: Sale un mensaje de que el material no tiene datos de planificación (MRP) en el centro.
+    meaning: El material no tiene vistas MRP en ese centro.
+    what_to_do: Revisa en MM03 las vistas MRP del material en ese centro; si faltan, las debe crear el responsable de datos maestros.
+    verified: false
+  - error: La cantidad disponible aparece en rojo.
+    meaning: Habrá faltante en esa fecha si no llega una entrada.
+    what_to_do: Crea o adelanta una solicitud o un pedido, o avisa al planificador (MRP controller).
+    verified: true
+verification:
+  status: verificado
+  sin_verificar:
+    - ID de la app Fiori "Monitor Stock / Requirements List" (no aparece en la documentación revisada).
+sources:
+  - {title: "SAP Help (ERP): Transaction Codes for MRP (PP-MRP), MD04 Stock/requirements list", url: "https://help.sap.com/docs/SAP_ERP/85d3fce10e264972a0155c8b46ecf93b/f3a9ce5314894208e10000000a174cb4.html"}
+  - {title: "SAP Help (Advanced MD04): Stock/Requirements List (filas con faltante en rojo)", url: "https://help.sap.com/docs/SCMCSMD4/b7b390bdcebb4288b19fcca545cfab66/c4e97d89cc994c8c87a6f17bdf61d880.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Manage Material Coverage (F0251)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/31c16f543e0de830e10000000a44538d.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Safety Stock Methods (Monitor Stock / Requirements List (MD04), F0251A)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/c6f52b36785c42e2a3296e94d15fd753.html"}
+  - {title: "SAP Help (S/4HANA on-premise): MRP List and Stock/Requirements List", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/fe39e10a9a864a8f8dc9537704f0fa13/0819ba53422bb54ce10000000a174cb4.html"}
+  - {title: "SAP Support Content: Materials Management Tables (MARC, EBAN, EKET, RESB)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08

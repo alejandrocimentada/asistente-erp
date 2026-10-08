@@ -1,0 +1,66 @@
+id: material-change
+module: MM
+area: materiales
+names:
+  es: Modificar los datos maestros de un material
+  en: Change material master
+tcode: MM02
+related_tcodes: [MM03, MM01, MM04]
+keywords:
+  es: [modificar material, cambiar material, editar material, actualizar datos maestros, cambiar descripcion, cambiar unidad, corregir material, cambiar grupo de articulos]
+  en: [change material, edit material, update material master, modify material, change description, product master]
+summary: >-
+  Permite cambiar los datos de un material ya existente (descripción, datos de compras, MRP,
+  almacén, etc.). Cada cambio queda registrado con usuario y fecha. En muchas empresas solo
+  el equipo de datos maestros tiene permiso para usarla.
+s4hana_notes: >-
+  MM02 sigue en S/4HANA (también en Cloud). En Fiori se edita con "Manage Product Master Data"
+  (F1602). Si tu área todavía no tiene datos para ese material (por ejemplo, un centro nuevo),
+  primero hay que ampliarlo; MM02 solo modifica lo que ya existe.
+fiori_app:
+  name: Manage Product Master Data
+  id: F1602
+  note: Edición de productos (materiales) desde Fiori.
+steps:
+  - "Antes de cambiar, revisa el dato actual con MM03 para no equivocarte."
+  - Escribe MM02 y presiona Enter.
+  - Escribe el código en "Material" y presiona Enter. SAP lee solo el tipo de material y el ramo.
+  - Marca las vistas que vas a cambiar y presiona Enter.
+  - Si la vista es de centro o almacén, escribe el Centro (Plant) y el Almacén (Storage Location). SAP solo te ofrece los que ya existen para ese material.
+  - Cambia los campos necesarios.
+  - Guarda con el botón Guardar (Ctrl+S). SAP muestra un mensaje confirmando el cambio.
+  - Para ver el historial de cambios, usa MM04.
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Código del material que vas a cambiar.}
+  - {label: Centro (Plant), technical: WERKS, meaning: Centro cuyos datos vas a cambiar.}
+  - {label: Vistas (Views), technical: "", meaning: "Grupos de datos: Datos básicos, Compras, MRP, Almacén, Contabilidad…"}
+tables:
+  - {name: MARA, description: Datos generales del material.}
+  - {name: MAKT, description: Descripciones del material.}
+  - {name: MARC, description: Datos por centro.}
+  - {name: MARD, description: Datos por almacén.}
+  - {name: MBEW, description: Valoración.}
+common_errors:
+  - error: SAP no te deja entrar a una vista de centro, o dice que el material no está creado en ese centro.
+    meaning: El material no ha sido ampliado a ese centro o vista. MM02 no crea datos nuevos.
+    what_to_do: Pídele al responsable de datos maestros que lo amplíe (MM01).
+    verified: true
+  - error: No tienes autorización para la transacción MM02.
+    meaning: Tu rol solo permite consultar.
+    what_to_do: Pide el cambio al equipo de datos maestros o a tu usuario clave (key user).
+    verified: false
+  - error: El material está bloqueado por otro usuario.
+    meaning: Alguien más lo está modificando en este momento.
+    what_to_do: Espera a que termine y vuelve a intentar.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar: []
+sources:
+  - {title: "SAP Support Content: Material Master transactions (MM01, MM02, MM03, MM04)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/ldm/3363506423.html"}
+  - {title: "SAP Support Content: Create, change and display material master", url: "https://help.sap.com/docs/SUPPORT_CONTENT/ldm/3363506573.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Change Material", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/26d6b8535c39b44ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2502): Harmonization of Accounting 1 View in Material Master Data (MM01/MM02/MM03)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/c6bc991fe14e4dc2a83f41a86f08cdb2.html?version=2502.00"}
+  - {title: "SAP Help (S/4HANA Cloud): Manage Product Master Data (F1602)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/0483875792f25c08e10000000a441470.html"}
+  - {title: "SAP Support Content: Materials Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08

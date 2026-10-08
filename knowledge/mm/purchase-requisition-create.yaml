@@ -1,0 +1,59 @@
+id: purchase-requisition-create
+module: MM
+area: compras
+names:
+  es: Crear una solicitud de pedido (requisición de compra)
+  en: Create purchase requisition
+tcode: ME51N
+related_tcodes: [ME52N, ME53N, ME54N, ME21N]
+keywords:
+  es: [solicitud de pedido, crear solicitud de pedido, requisicion, requisicion de compra, solicitud de compra, pedir material a compras, pedir que compren, necesidad de compra, solped, sol ped]
+  en: [purchase requisition, create purchase requisition, create pr, requisition, request purchase, ask purchasing]
+summary: >-
+  Una solicitud de pedido es el aviso interno a Compras de que se necesita algo. No va al
+  proveedor: Compras la convierte después en un pedido (orden de compra). Si tú solo necesitas
+  pedir algo y no eres comprador, normalmente esto es lo que debes crear.
+s4hana_notes: >-
+  ME51N existe en ECC y en S/4HANA. En Fiori se usa "Manage Purchase Requisitions -
+  Professional" (F2229). La versión antigua ME51 fue reemplazada por ME51N.
+fiori_app:
+  name: Manage Purchase Requisitions - Professional
+  id: F2229
+  note: Crear, buscar y modificar solicitudes de pedido desde Fiori.
+steps:
+  - Escribe ME51N y presiona Enter.
+  - Revisa la Clase de documento (Document Type) arriba a la izquierda; normalmente es la estándar de tu empresa.
+  - "En la tabla de posiciones escribe por cada renglón: Material (o un texto breve si no tiene código), Cantidad, Fecha de entrega, Centro (Plant) y, si aplica, Almacén."
+  - "Si es un gasto (no va a stock), llena el Tipo de imputación (Account Assignment Category) y el centro de coste u otro objeto que te pidan."
+  - Presiona Verificar (Check) y corrige los mensajes en rojo.
+  - Guarda (Ctrl+S) y anota el número de la solicitud.
+  - "Si tu empresa usa aprobaciones, la solicitud debe ser liberada (ME54N) antes de que Compras la convierta en pedido."
+key_fields:
+  - {label: Material, technical: EBAN-MATNR, meaning: Qué necesitas.}
+  - {label: Cantidad (Quantity), technical: EBAN-MENGE, meaning: Cuánto necesitas.}
+  - {label: Centro (Plant), technical: EBAN-WERKS, meaning: Dónde lo necesitas.}
+  - {label: Tipo de imputación (Account Assignment Category), technical: EBAN-KNTTP, meaning: "Indica si es un gasto (por ejemplo K = centro de coste) en lugar de stock."}
+tables:
+  - {name: EBAN, description: Solicitud de pedido.}
+  - {name: EBKN, description: Imputación de la solicitud de pedido.}
+common_errors:
+  - error: "ME083: Enter cost center (introduzca un centro de coste)."
+    meaning: La posición tiene una imputación que exige centro de coste.
+    what_to_do: Escribe el centro de coste correcto; si no lo sabes, pregúntalo en tu área.
+    verified: true
+  - error: El material no existe en el centro.
+    meaning: El material no tiene datos en ese centro.
+    what_to_do: Revisa el centro o pide ampliar el material.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Campos técnicos EBAN-MATNR, MENGE, WERKS y KNTTP: no aparecen literalmente en las páginas revisadas."
+sources:
+  - {title: "SAP Help (ERP): Process Purchase Requisition (ME51N, ME52N, ME53N)", url: "https://help.sap.com/docs/SAP_ERP/6cfdc7caaef746cd9c7543e32e7e87c0/ed06b753128eb44ce10000000a174cb4.html"}
+  - {title: "SAP Help (ERP): Purchasing Applications in Single-Screen Transactions (ME51N reemplaza ME51)", url: "https://help.sap.com/docs/SAP_ERP/967e1c2a6a8c4183b7e07d28e7574445/787db65334e6b54ce10000000a174cb4.html"}
+  - {title: "SAP Help (S/4HANA 2025 FPS01): International Trade Compliance Checks for Purchase Requisitions (ME51N, ME52N, ME53N)", url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/fd31fff09a82412ba2e181b67f1757d2.html?version=2025.001"}
+  - {title: "SAP Help (S/4HANA Cloud Best Practices): Manage Purchase Requisitions - Professional (F2229)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/3f98c7ca9c22a50ae323aefa23deb3c8/f08274e0fe364e278181f061bab43cc0.html"}
+  - {title: "SAP Support Content: Purchase Requisition (error ME083 en ME51N)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168187.html"}
+  - {title: "SAP Support Content: Materials Management Tables (EBAN, EBKN)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08

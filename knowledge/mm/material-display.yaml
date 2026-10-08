@@ -1,0 +1,64 @@
+id: material-display
+module: MM
+area: materiales
+names:
+  es: Ver los datos maestros de un material
+  en: Display material master
+tcode: MM03
+related_tcodes: [MM02, MM01, MM04, MMBE]
+keywords:
+  es: [ver material, consultar material, datos maestros, ficha del material, maestro de materiales, descripcion del material, unidad de medida, grupo de articulos, vistas del material, visualizar material]
+  en: [display material, material master, view material, material data, material description, unit of measure, material group, material views, product master]
+summary: >-
+  Abre la "ficha" de un material en modo solo lectura: descripción, unidad de medida, grupo,
+  datos de compras, de planificación (MRP), de almacén y de contabilidad. No cambia nada, así
+  que es la forma segura de revisar cómo está configurado un material.
+s4hana_notes: >-
+  MM03 sigue en S/4HANA (también en Cloud). En Fiori el material se llama "producto" y se
+  consulta con la app "Manage Product Master Data" (F1602). Los datos se siguen guardando en las
+  tablas del maestro de materiales (MARA, MARC, MARD, etc.).
+fiori_app:
+  name: Manage Product Master Data
+  id: F1602
+  note: Sirve para buscar, ver, crear, copiar y editar productos (materiales).
+steps:
+  - Escribe MM03 y presiona Enter.
+  - Escribe el código en "Material" y presiona Enter.
+  - Se abre una ventana para elegir vistas (Datos básicos, Compras, MRP 1-4, Almacén, Contabilidad…). Marca las que quieras ver y presiona Enter.
+  - "Si elegiste vistas de centro o almacén, SAP te pide los niveles de organización: escribe el Centro (Plant) y, si aplica, el Almacén (Storage Location)."
+  - Navega entre las pestañas de cada vista. Todos los campos están en gris porque es solo consulta.
+  - "Para ver quién cambió algo y cuándo, usa MM04 (documentos de modificación)."
+key_fields:
+  - {label: Material, technical: MATNR, meaning: Código del material.}
+  - {label: Centro (Plant), technical: WERKS, meaning: Necesario para vistas de centro como MRP o Compras.}
+  - {label: Tipo de material (Material Type), technical: MTART, meaning: "Clasifica el material (materia prima, producto terminado, etc.) y define qué vistas tiene."}
+  - {label: Unidad de medida base (Base Unit of Measure), technical: MEINS, meaning: Unidad en la que se lleva el stock.}
+tables:
+  - {name: MARA, description: Datos generales del material.}
+  - {name: MAKT, description: Descripciones del material por idioma.}
+  - {name: MARC, description: Datos del material por centro (compras, MRP).}
+  - {name: MARD, description: Datos del material por almacén.}
+  - {name: MBEW, description: Valoración del material.}
+  - {name: MVKE, description: Datos de ventas del material.}
+  - {name: MARM, description: Unidades de medida del material.}
+common_errors:
+  - error: SAP dice que el material no existe en el centro, o la vista no está disponible.
+    meaning: El material existe, pero no ha sido "ampliado" a ese centro o a esa vista.
+    what_to_do: Prueba otro centro o pídele al responsable de datos maestros que amplíe el material (eso se hace con MM01).
+    verified: true
+  - error: No tienes autorización para ver una vista (por ejemplo Contabilidad).
+    meaning: Tu rol de usuario no incluye esa parte del maestro.
+    what_to_do: Pídele el acceso a tu usuario clave (key user) o al equipo de seguridad de SAP.
+    verified: false
+verification:
+  status: verificado
+  sin_verificar:
+    - "Campos técnicos MTART y MEINS: no aparecen en las páginas revisadas."
+sources:
+  - {title: "SAP Support Content: Material Master transactions (MM01, MM02, MM03, MM04)", url: "https://help.sap.com/docs/SUPPORT_CONTENT/ldm/3363506423.html"}
+  - {title: "SAP Support Content: Create, change and display material master", url: "https://help.sap.com/docs/SUPPORT_CONTENT/ldm/3363506573.html"}
+  - {title: "SAP Help (S/4HANA Cloud 2502): Harmonization of Accounting 1 View in Material Master Data (MM01/MM02/MM03)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/c6bc991fe14e4dc2a83f41a86f08cdb2.html?version=2502.00"}
+  - {title: "SAP Help (S/4HANA Cloud): Manage Product Master Data (F1602)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/0483875792f25c08e10000000a441470.html"}
+  - {title: "SAP Help (S/4HANA Cloud): Change Material (ampliar antes de modificar)", url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/26d6b8535c39b44ce10000000a174cb4.html"}
+  - {title: "SAP Support Content: Materials Management Tables", url: "https://help.sap.com/docs/SUPPORT_CONTENT/spmm/3362168098.html"}
+last_verified: 2026-10-08
